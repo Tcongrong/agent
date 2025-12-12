@@ -1,0 +1,59 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: demo
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  datasource:
+    url:  ${DATASOURCE_URL:jdbc:mysql://124.70.82.78:3306/health_agent_db?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true}
+    username:  ${DATASOURCE_USERNAME:root}
+    password: ${DATASOURCE_PASSWORD:change_this_in_production}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 60000
+      idle-timeout: 300000
+      max-lifetime: 900000
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+  # JPA 配置
+  jpa:
+    hibernate:
+      ddl-auto: update  # 更新表结构，不删除现有数据
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # Flyway 配置 - 完全禁用
+  flyway:
+    enabled: false  # 禁用Flyway迁移
+
+# MyBatis 配置
+mybatis:
+  type-aliases-package: com.example.demo.*.entity  # 实体类包路径，简化 XML 中的类型引用
+  mapper-locations: classpath:mapper/*.xml  # Mapper XML 文件位置
+  configuration:
+    map-underscore-to-camel-case: true  # 数据库下划线字段自动映射为 Java 驼峰属性
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 打印 SQL 语句到控制台
+
+# JWT 配置
+jwt:
+  secret: ${JWT_SECRET:mySecretKey123456789012345678901234567890}
+  expiration: ${JWT_EXPIRATION:86400000}  # 24小时，单位毫秒
+
+# 日志配置
+logging:
+  level:
+    com.example.demo: DEBUG
+    org.springframework.security: DEBUG
+
+# DeepSeek API 配置
+deepseek:
+  api:
+    key: ${AI_API_KEY:sk-2b756b45bd7141beaeb0308c38f43d94}  # 请替换为实际的API密钥
+    url: ${AI_API_URL:https://api.deepseek.com}
+  model: ${AI_MODEL:deepseek-chat}

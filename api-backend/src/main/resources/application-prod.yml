@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: health-agent
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:mysql://124.70.82.78:3306/health_agent_db?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true}
+    username: ${DATASOURCE_USERNAME:root}
+    password: ${DATASOURCE_PASSWORD:change_this_in_production}
+
+
+# 生产环境日志级别（可选）
+logging:
+  level:
+    root: WARN
+    com.health.agent: INFO

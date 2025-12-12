@@ -1,0 +1,35 @@
+@import './base.css';
+
+/* 默认应用样式 - 仅在非登录页面生效 */
+#app:not(.login-page) {
+  max-width: 100%;
+  margin: 0 auto;
+  font-weight: normal;
+}
+
+/* 登录页面特殊样式 */
+#app.login-page {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+a,
+green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+/* 移除可能导致布局冲突的媒体查询样式 */
+@media (min-width: 1024px) {
+  /* 允许组件自身控制布局 */
+}

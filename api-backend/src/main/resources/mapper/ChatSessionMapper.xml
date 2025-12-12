@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.chat.mapper.ChatSessionMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="ChatSessionResultMap" type="com.example.demo.chat.entity.ChatSession">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="title" column="title"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <!-- 根据ID查找会话 -->
+    <select id="selectById" resultMap="ChatSessionResultMap">
+        SELECT * FROM chat_session WHERE id = #{id} AND is_deleted = 0
+    </select>
+
+    <!-- 根据用户ID查找所有会话（未删除的） -->
+    <select id="selectByUserId" resultMap="ChatSessionResultMap">
+        SELECT * FROM chat_session 
+        WHERE user_id = #{userId} AND is_deleted = 0
+        ORDER BY updated_at DESC
+    </select>
+
+    <!-- 插入新会话 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO chat_session (user_id, title, created_at, updated_at, is_deleted)
+        VALUES (#{userId}, #{title}, NOW(), NOW(), 0)
+    </insert>
+
+    <!-- 更新会话信息 -->
+    <update id="update">
+        UPDATE chat_session 
+        SET title = #{title}, 
+            updated_at = NOW()
+        WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+    <!-- 更新会话标题 -->
+    <update id="updateTitle">
+        UPDATE chat_session 
+        SET title = #{title}, 
+            updated_at = NOW()
+        WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+    <!-- 软删除会话 -->
+    <update id="deleteById">
+        UPDATE chat_session 
+        SET is_deleted = 1, 
+            updated_at = NOW()
+        WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+    <!-- 批量软删除会话 -->
+    <update id="deleteBatchByIds">
+        UPDATE chat_session 
+        SET is_deleted = 1, 
+            updated_at = NOW()
+        WHERE id IN 
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        AND user_id = #{userId} AND is_deleted = 0
+    </update>
+
+    <!-- 统计用户的会话数量 -->
+    <select id="countByUserId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM chat_session 
+        WHERE user_id = #{userId} AND is_deleted = 0
+    </select>
+</mapper>
